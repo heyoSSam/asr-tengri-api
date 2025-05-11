@@ -2,9 +2,8 @@ from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import JSONResponse
 from transformers import pipeline
 import io
-import soundfile as sf  # Лучше чем librosa для WAV
+import soundfile as sf
 
-# Инициализация FastAPI и модели
 app = FastAPI()
 asr_pipeline = pipeline("automatic-speech-recognition", model="t3ngr1/whisper-small-kk")
 
@@ -20,8 +19,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
     if sample_rate != 16000:
         return JSONResponse(status_code=400, content={"error": "Sample rate must be 16kHz."})
-
-    # Получение результата
+    
     result = asr_pipeline(waveform)
     return {"text": result["text"]}
 
